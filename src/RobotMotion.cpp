@@ -60,12 +60,12 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     }
     else if (direction == "left")
     {
-        msg.linear.x = speed;        // Stop moving forward/backward
+        msg.linear.x = 1;        // Stop moving forward/backward
         msg.angular.z = speed; 
     }
     else if (direction == "right")
     {
-        msg.linear.x = speed;        // Stop moving forward/backward
+        msg.linear.x = 1;        // Stop moving forward/backward
         msg.angular.z = speed; 
     }
     else
@@ -73,14 +73,17 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
         cout << "Invalid direction entered, defaulting to forward." << endl;
         msg.linear.x = speed;
     }
-    
-    this_thread::sleep_for(std::chrono::seconds(5)); // Move for 5 seconds
-
-    // stop the robot after 5 seconds
-    msg.linear.x = 0;
-    msg.angular.z = 0;
     // Publish the movement message
     cmd_vel_pub->publish(msg);
+    
+    // 5 sec sleep
+    this_thread::sleep_for(std::chrono::seconds(5));
+    
+    // Stop the robot after 5 seconds
+    msg.linear.x = 0;
+    msg.angular.z = 0;
+    
+    cmd_vel_pub->publish(msg); // Publish stop command
 }
 
 int main(int argc, char **argv)
