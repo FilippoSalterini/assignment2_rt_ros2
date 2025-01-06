@@ -11,11 +11,6 @@ one node capable of moving the robot around in the simulation environment*/
 
 using namespace std;
 
-//void function to move the robot
-//declare a publisher that is going to publish a message of type <geometry_msgs::msg::Twist>
-//sharedPtr used to manage the memory of the publisher object
-//ensures that the publisher object is properly cleaned up once it's no longer needed
-
 //subsriber to print robot position and velocity
 void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
 { 
@@ -66,7 +61,7 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     else if (direction == "right")
     {
         msg.linear.x = 1;        // Stop moving forward/backward
-        msg.angular.z = speed; 
+        msg.angular.z = -speed; 
     }
     else
     {
@@ -102,11 +97,63 @@ int main(int argc, char **argv)
         node->create_subscription<nav_msgs::msg::Odometry>(
             "/odom", 10, odom_callback);
 
+    auto msg = geometry_msgs::msg::Twist();
 
-    robot_motion(cmd_vel_pub);
-
-    rclcpp::spin(node); //this ensures the node to continue running
+    string direction;
+    double speed = 0.2; //checked on internet is a default speed for robots (?)
     
+    cout <<"LIST OF POSSIBLE DIRECTIONS \n"<< endl;
+    cout <<" [forward]\n [backward]\n [left]\n [right]\n"<<endl; 
+    
+    cout << "Enter the direction of the robot: ";
+    cin >> direction;
+
+    cout << "Enter the speed (default 0.2 m/s): ";
+    cin >> speed;
+
+    if (direction == "forward")
+    
+    {
+        msg.linear.x = speed;
+    }
+    else if (direction == "backward")
+    {
+        msg.linear.x = -speed;
+    }
+    else if (direction == "left")
+    {
+        msg.linear.x = 1;        // Stop moving forward/backward
+        msg.angular.z = speed; 
+    }
+    else if (direction == "right")
+    {
+        msg.linear.x = 1;        // Stop moving forward/backward
+        msg.angular.z = speed; 
+    }
+    else
+    {
+        cout << "Invalid direction entered, defaulting to forward." << endl;
+        msg.linear.x = speed;
+    }
+    // Publish the movement message
+    cmd_vel_pub->publish(msg);
+    
+    rclcpp::Rate loop_rate(10);
+
+    // Run for 5 seconds and process callbacks then stop
+    for (int i = 0; i < 50; ++i)
+    {
+        rclcpp::spin_some(node); //odometry callback
+        loop_rate.sleep();
+    }
+    
+    // Stop the robot
+    msg.linear.x = 0;
+    msg.angular.z = 0;
+    cmd_vel_pub->publish(msg);
+
+    cout << "Robot stopped, exiting from the node..." << endl;
+
     rclcpp::shutdown();
     return 0;
 }
