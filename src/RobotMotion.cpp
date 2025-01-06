@@ -5,7 +5,6 @@ one node capable of moving the robot around in the simulation environment*/
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <nav_msgs/msg/odometry.hpp>
-#include <nav_msgs/msg/odometry.hpp>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -40,8 +39,10 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
 
     string direction;
     double speed = 0.2; //checked on internet is a default speed for robots (?)
+    
     cout <<"LIST OF POSSIBLE DIRECTIONS \n"<< endl;
-    cout <<" [forward]\n [backward]\n [left]\n [right]\n"; 
+    cout <<" [forward]\n [backward]\n [left]\n [right]\n"<<endl; 
+    
     cout << "Enter the direction of the robot: ";
     cin >> direction;
 
@@ -49,6 +50,7 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     cin >> speed;
 
     if (direction == "forward")
+    
     {
         msg.linear.x = speed;
     }
@@ -58,18 +60,25 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     }
     else if (direction == "left")
     {
-        msg.angular.z = speed;
+        msg.linear.x = speed;        // Stop moving forward/backward
+        msg.angular.z = speed; 
     }
     else if (direction == "right")
     {
-        msg.angular.z = -speed;
+        msg.linear.x = speed;        // Stop moving forward/backward
+        msg.angular.z = speed; 
     }
     else
     {
         cout << "Invalid direction entered, defaulting to forward." << endl;
         msg.linear.x = speed;
     }
+    
+    this_thread::sleep_for(std::chrono::seconds(5)); // Move for 5 seconds
 
+    // stop the robot after 5 seconds
+    msg.linear.x = 0;
+    msg.angular.z = 0;
     // Publish the movement message
     cmd_vel_pub->publish(msg);
 }
