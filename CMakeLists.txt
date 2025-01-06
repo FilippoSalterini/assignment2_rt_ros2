@@ -32,4 +32,21 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+ament_target_dependencies(robot_motion
+  rclcpp
+  std_msgs
+  geometry_msgs
+)
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+install(TARGETS
+  robot_motion
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+add_executable(robot_motion src/RobotMotion.cpp)
+
 ament_package()
