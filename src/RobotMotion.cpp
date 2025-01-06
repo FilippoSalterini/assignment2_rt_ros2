@@ -40,7 +40,7 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
 
     string direction;
     double speed = 0.2; //checked on internet is a default speed for robots (?)
-    cout <<"LIST OF POSSIBLE DIRECTIONS \n"<<;
+    cout <<"LIST OF POSSIBLE DIRECTIONS \n"<< endl;
     cout <<" [forward]\n [backward]\n [left]\n [right]\n"; 
     cout << "Enter the direction of the robot: ";
     cin >> direction;
@@ -66,7 +66,7 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     }
     else
     {
-        cout << "Invalid direction entered, defaulting to forward." << std::endl;
+        cout << "Invalid direction entered, defaulting to forward." << endl;
         msg.linear.x = speed;
     }
 
