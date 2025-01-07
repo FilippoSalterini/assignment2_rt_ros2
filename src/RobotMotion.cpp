@@ -39,13 +39,12 @@ void robot_motion(rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_ve
     cout <<" [forward]\n [backward]\n [left]\n [right]\n"<<endl; 
     
     cout << "Enter the direction of the robot: ";
-    cin >> direction;
+    cin >> direction;    
 
     cout << "Enter the speed (default 0.2 m/s): ";
     cin >> speed;
-
+     
     if (direction == "forward")
-    
     {
         msg.linear.x = speed;
     }
