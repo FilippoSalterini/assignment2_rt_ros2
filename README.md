@@ -28,3 +28,9 @@ After the robot has stopped, *rclcpp::shutdown()* is called to shut down the ROS
 1. First launch the gazebo simulation by using *ros2 launch robot_urdf gazebo.launch.py*
 2. Run the node RobotMotion.cpp by using *ros2 run assignment2_rt_ros2 robot_motion* , the user is allowed to choose a direction and a speed, once the command is sent and robot
 is moving after 5 second he stop, if the user want to choose a new direction must run again the node.
+
+# NOTES  
+The interface with the user is not perfectly programmed, it is a simple program just to set a direction and a speed,  if the user set a wrong input like
+a direction that is not [forward] [backward] [left] [right] the robot, by default , will go forward.  
+Also is it required to choose not high values for the speed, as said the default speed fot the robot is 0.2 (m/s)  
+For other explanation check the annotations in the code.
