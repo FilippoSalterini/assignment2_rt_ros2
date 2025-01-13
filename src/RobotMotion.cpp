@@ -20,6 +20,12 @@ using namespace std;
 double prev_x = 0.0;
 double prev_y = 0.0;
 
+      //ExamRT
+      //function for converting feet in mt
+double meterstoFeet(double meters) {
+      return meters * 3.28084;
+      }
+    
 
 //subsriber to print robot position and velocity
 void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
@@ -32,13 +38,7 @@ void odom_callback(const nav_msgs::msg::Odometry::SharedPtr msg)
     //get robot's velocity from the message (L and A)
     double linear_velocity = msg->twist.twist.linear.x;  // Linear velocity in x direction
     double angular_velocity = msg->twist.twist.angular.z; // Angular velocity (rotation)
-    
-      //ExamRT
-      //function for converting feet in mt
-double meterstoFeet(double meters) {
-      return meters * 3.28084;
-      }
-    
+
       //ExamRT
       double dx = metersToFeet(x - prev_x);
       double dy = metersToFeet(y - prev_y);
